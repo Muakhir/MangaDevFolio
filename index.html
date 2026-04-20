@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MUAKHIR — 開発者</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700;900&family=Zen+Kaku+Gothic+New:wght@400;700;900&family=Shippori+Mincho:wght@400;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#0a0a0f',
+            paper: '#f5f0e8',
+            'paper-dark': '#e8e0d0',
+            sumi: '#1a1a1a',
+            vermillion: '#c23030',
+            'vermillion-dark': '#8b1a1a',
+            indigo: '#1a2744',
+            gold: '#b8960c',
+            ash: '#4a4a4a',
+          },
+          fontFamily: {
+            serif: ['Shippori Mincho', 'Noto Serif JP', 'serif'],
+            sans: ['Zen Kaku Gothic New', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+</head>
+<body class="font-sans bg-paper text-sumi overflow-x-hidden">
+
+  <!-- ═══ LOADING SCREEN ═══ -->
+  <div class="loading-screen" id="loadingScreen" aria-hidden="true">
+    <svg class="loading-brush" viewBox="0 0 200 200">
+      <!-- Ink brush stroke — kanji-inspired "開" simplification -->
+      <path d="M40,50 Q60,45 100,50 Q140,55 160,50" fill="none" stroke="#f5f0e8" stroke-width="5" stroke-linecap="round" class="stroke-main"/>
+      <path d="M50,50 L50,150" fill="none" stroke="#f5f0e8" stroke-width="4" stroke-linecap="round" class="stroke-main"/>
+      <path d="M150,50 L150,150" fill="none" stroke="#f5f0e8" stroke-width="4" stroke-linecap="round" class="stroke-main"/>
+      <path d="M50,100 Q100,95 150,100" fill="none" stroke="#f5f0e8" stroke-width="3" stroke-linecap="round" class="stroke-accent"/>
+      <path d="M75,100 L75,150 Q100,155 125,150 L125,100" fill="none" stroke="#f5f0e8" stroke-width="3" stroke-linecap="round" class="stroke-accent"/>
+      <!-- Hanko stamp -->
+      <rect x="155" y="155" width="35" height="35" rx="2" fill="none" stroke="#c23030" stroke-width="2" class="stamp-box"/>
+      <text x="172" y="177" text-anchor="middle" fill="#c23030" font-family="Noto Serif JP" font-size="12" font-weight="900" class="stamp-text">開発</text>
+    </svg>
+    <span class="loading-text">LOADING</span>
+  </div>
+
+  <!-- Washi paper texture -->
+  <div class="washi-overlay" aria-hidden="true"></div>
+
+  <!-- ═══ NAVIGATION ═══ -->
+  <nav class="fixed top-0 left-0 right-0 z-[1000] flex items-center justify-between px-6 py-3 bg-ink/95 backdrop-blur-md border-b border-vermillion/60 transition-transform duration-300" id="nav">
+    <a href="#hero" class="font-serif font-bold text-xl text-paper tracking-[0.2em] no-underline">
+      MUAKHIR<span class="text-vermillion ml-1 kanji-flip" data-en="Dev"><span class="kanji-face">開発</span><span class="english-face">Dev</span></span>
+    </a>
+    <div class="hidden md:flex gap-8" id="navLinks">
+      <a href="#about" class="nav-link font-serif text-xs text-paper/60 tracking-[4px] uppercase no-underline hover:text-paper transition-colors">About</a>
+      <a href="#skills" class="nav-link font-serif text-xs text-paper/60 tracking-[4px] uppercase no-underline hover:text-paper transition-colors">Skills</a>
+      <a href="#works" class="nav-link font-serif text-xs text-paper/60 tracking-[4px] uppercase no-underline hover:text-paper transition-colors">Works</a>
+      <a href="#gallery" class="nav-link font-serif text-xs text-paper/60 tracking-[4px] uppercase no-underline hover:text-paper transition-colors">Gallery</a>
+      <a href="#contact" class="nav-link font-serif text-xs text-paper/60 tracking-[4px] uppercase no-underline hover:text-paper transition-colors">Contact</a>
+    </div>
+    <button class="md:hidden bg-transparent border border-vermillion/50 text-paper text-lg px-2 py-0.5 cursor-pointer" id="navToggle" aria-label="Menu">三</button>
+    <div class="hidden absolute top-full left-0 right-0 bg-ink/[.98] flex flex-col gap-4 px-6 py-5 border-b border-vermillion/40 md:hidden" id="mobileMenu">
+      <a href="#about" class="font-serif text-sm text-paper/70 tracking-[3px] no-underline hover:text-paper">ABOUT</a>
+      <a href="#skills" class="font-serif text-sm text-paper/70 tracking-[3px] no-underline hover:text-paper">SKILLS</a>
+      <a href="#works" class="font-serif text-sm text-paper/70 tracking-[3px] no-underline hover:text-paper">WORKS</a>
+      <a href="#gallery" class="font-serif text-sm text-paper/70 tracking-[3px] no-underline hover:text-paper">GALLERY</a>
+      <a href="#contact" class="font-serif text-sm text-paper/70 tracking-[3px] no-underline hover:text-paper">CONTACT</a>
+    </div>
+  </nav>
+
+  <!-- ═══ HERO — 第一章 ═══ -->
+  <section class="relative min-h-screen flex items-center justify-center bg-ink overflow-hidden" id="hero">
+    <!-- Ink wash background -->
+    <div class="absolute inset-0 ink-wash-bg"></div>
+    <!-- Asanoha pattern overlay -->
+    <div class="absolute inset-0 asanoha-pattern opacity-[0.03]"></div>
+
+    <div class="relative z-10 text-center px-6 max-w-4xl">
+      <!-- Vertical Japanese text -->
+      <div class="absolute top-8 right-8 md:right-16 writing-vertical font-serif text-paper/10 text-2xl tracking-[0.5em] select-none" aria-hidden="true">
+        <span class="kanji-flip" data-en="Path of the Developer"><span class="kanji-face">開発者の道</span><span class="english-face">Path of the Developer</span></span>
+      </div>
+
+      <!-- Brush stroke accent -->
+      <svg class="absolute -left-10 top-1/2 -translate-y-1/2 w-[120px] opacity-20 hidden md:block" viewBox="0 0 80 400" aria-hidden="true">
+        <path d="M40,10 Q20,100 45,200 Q70,300 35,390" fill="none" stroke="#c23030" stroke-width="6" stroke-linecap="round" class="brush-stroke"/>
+      </svg>
+
+      <!-- Hanko stamp -->
+      <div class="hanko mx-auto mb-8" aria-hidden="true">
+        <svg viewBox="0 0 70 70" class="w-16 h-16 mx-auto kanji-flip" data-en="Developer">
+          <rect x="5" y="5" width="60" height="60" rx="3" fill="none" stroke="#c23030" stroke-width="3"/>
+          <text x="35" y="32" text-anchor="middle" fill="#c23030" font-family="Noto Serif JP" font-size="16" font-weight="900" class="kanji-face">開発</text>
+          <text x="35" y="52" text-anchor="middle" fill="#c23030" font-family="Noto Serif JP" font-size="16" font-weight="900" class="kanji-face">者</text>
+          <text x="35" y="42" text-anchor="middle" fill="#c23030" font-family="Shippori Mincho" font-size="10" font-weight="700" class="english-face" opacity="0">DEV</text>
+        </svg>
+      </div>
+
+      <h1 class="font-serif font-black leading-none mb-6">
+        <span class="block text-[clamp(2.5rem,8vw,6rem)] text-paper tracking-[0.15em] hero-text">MUAKHIR</span>
+        <span class="block text-[clamp(0.8rem,2.5vw,1.3rem)] text-vermillion tracking-[0.6em] mt-4 font-normal">SOFTWARE DEVELOPER &middot; PYTHON &middot; AI</span>
+      </h1>
+
+      <div class="max-w-lg mx-auto mb-10 border-t border-b border-paper/10 py-6">
+        <p class="text-paper/50 font-serif text-sm md:text-base leading-relaxed tracking-wide">
+          Software developer specializing in AI/ML, neural networks, automation, and full-stack development.
+          <br/>Python. PyTorch. React. From concept to production.
+        </p>
+      </div>
+
+      <a href="#about" class="inline-block font-serif text-sm tracking-[5px] uppercase text-paper/70 border border-paper/20 px-8 py-3 no-underline hover:bg-vermillion hover:border-vermillion hover:text-paper transition-all duration-500">
+        Enter ▼
+      </a>
+    </div>
+
+    <!-- Bottom ink drip -->
+    <svg class="absolute bottom-0 left-0 w-full" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,80 L0,30 Q360,0 720,30 Q1080,60 1440,20 L1440,80 Z" fill="#f5f0e8"/>
+    </svg>
+  </section>
+
+  <!-- ═══ ABOUT — 第二章 ═══ -->
+  <section class="px-4 md:px-8 pb-20 pt-8" id="about">
+    <div class="text-center mb-12">
+      <span class="font-serif text-xs tracking-[6px] text-vermillion uppercase kanji-flip" data-en="Chapter 1"><span class="kanji-face">第一章</span><span class="english-face">Chapter 1</span></span>
+      <h2 class="font-serif font-black text-[clamp(1.8rem,4vw,3rem)] tracking-wider mt-2 section-title-brush">About</h2>
+    </div>
+
+    <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-1">
+      <!-- Panel left -->
+      <div class="manga-panel border-[3px] border-sumi p-8 bg-white relative reveal" data-panel="1">
+        <div class="absolute top-3 left-3 font-serif text-[10px] tracking-[3px] text-ash/40 uppercase">Profile</div>
+        <div class="text-center">
+          <!-- Stylized avatar frame -->
+          <div class="w-32 h-32 mx-auto mb-4 border-[3px] border-sumi relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-indigo to-sumi flex items-center justify-center">
+              <span class="font-serif text-4xl text-paper font-black">M</span>
+            </div>
+            <!-- Corner accents -->
+            <div class="absolute -top-1 -left-1 w-3 h-3 border-t-2 border-l-2 border-vermillion"></div>
+            <div class="absolute -top-1 -right-1 w-3 h-3 border-t-2 border-r-2 border-vermillion"></div>
+            <div class="absolute -bottom-1 -left-1 w-3 h-3 border-b-2 border-l-2 border-vermillion"></div>
+            <div class="absolute -bottom-1 -right-1 w-3 h-3 border-b-2 border-r-2 border-vermillion"></div>
+          </div>
+          <h3 class="font-serif font-bold text-lg tracking-wider">MUAKHIR</h3>
+          <p class="text-xs text-ash tracking-wider mt-1">Software Developer</p>
+          <div class="mt-3 flex justify-center gap-2">
+            <span class="text-[10px] px-2 py-0.5 border border-sumi/20 tracking-wider text-ash">36 REPOS</span>
+            <span class="text-[10px] px-2 py-0.5 border border-sumi/20 tracking-wider text-ash">PULL SHARK</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel right -->
+      <div class="manga-panel border-[3px] border-sumi bg-white relative reveal" data-panel="2">
+        <div class="absolute top-3 left-3 font-serif text-[10px] tracking-[3px] text-ash/40 uppercase">Origin</div>
+        <div class="p-8 pt-10">
+          <div class="ink-border-left pl-6">
+            <h3 class="font-serif font-bold text-xl tracking-wider mb-4">The Path of the Developer</h3>
+            <p class="text-sm leading-relaxed text-ash mb-4">
+              A software developer building at the intersection of AI and engineering. From designing
+              Transformer architectures with spiking neural network attention gates, to building
+              low-code editor platforms in TypeScript — every project is a step further into mastery.
+            </p>
+            <p class="text-sm leading-relaxed text-ash mb-4">
+              Specializing in Python, PyTorch, computer vision, NLP, and full-stack web development.
+              9 active projects spanning neural networks, automation tools, CMS frameworks,
+              and real-time applications. Always building, always learning.
+            </p>
+            <p class="font-serif text-xs text-vermillion/60 tracking-[3px] italic mt-6">
+              "Clean code. Clear purpose. No shortcuts."
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel bottom full-width -->
+      <div class="manga-panel border-[3px] border-sumi bg-white md:col-span-2 relative reveal" data-panel="3">
+        <div class="p-6 flex flex-wrap gap-6 justify-center items-center">
+          <div class="text-center px-6 border-r border-sumi/10 last:border-0">
+            <span class="block font-serif font-black text-3xl text-sumi">45+</span>
+            <span class="text-[10px] tracking-[3px] text-ash uppercase">Repositories</span>
+          </div>
+          <div class="text-center px-6 border-r border-sumi/10">
+            <span class="block font-serif font-black text-3xl text-sumi">9</span>
+            <span class="text-[10px] tracking-[3px] text-ash uppercase">Active Projects</span>
+          </div>
+          <div class="text-center px-6 border-r border-sumi/10">
+            <span class="block font-serif font-black text-3xl text-sumi">4</span>
+            <span class="text-[10px] tracking-[3px] text-ash uppercase">Neural Networks</span>
+          </div>
+          <div class="text-center px-6">
+            <span class="block font-serif font-black text-3xl text-vermillion">10+</span>
+            <span class="text-[10px] tracking-[3px] text-ash uppercase">Languages & Frameworks</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SKILLS — 第三章 ═══ -->
+  <section class="px-4 md:px-8 pb-20 bg-ink text-paper" id="skills">
+    <!-- Top ink sweep -->
+    <svg class="w-full -mt-1" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,0 L0,40 Q720,60 1440,30 L1440,0 Z" fill="#f5f0e8"/>
+    </svg>
+
+    <div class="text-center mb-12 pt-8">
+      <span class="font-serif text-xs tracking-[6px] text-vermillion uppercase kanji-flip" data-en="Chapter 2"><span class="kanji-face">第二章</span><span class="english-face">Chapter 2</span></span>
+      <h2 class="font-serif font-black text-[clamp(1.8rem,4vw,3rem)] tracking-wider mt-2 text-paper section-title-brush-light">Skills</h2>
+    </div>
+
+    <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Ability Chart -->
+      <div class="border border-paper/10 bg-paper/[0.03] p-8 relative reveal">
+        <div class="absolute top-3 right-3 font-serif text-[10px] tracking-[3px] text-paper/20 uppercase">Ability Chart</div>
+        <h3 class="font-serif font-bold text-lg tracking-[3px] mb-6 text-vermillion kanji-flip" data-en="Ability Stats"><span class="kanji-face">能力値</span><span class="english-face">Ability Stats</span></h3>
+        <div class="space-y-4">
+          <div class="flex items-center gap-3">
+            <span class="font-serif text-xs tracking-widest w-28 shrink-0 text-paper/70">PYTHON</span>
+            <div class="flex-1 h-3 bg-paper/5 overflow-hidden"><div class="stat-fill h-full" data-level="95" style="--bar-color: #3776ab; width: 0"></div></div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-serif text-xs tracking-widest w-28 shrink-0 text-paper/70">PYTORCH / ML</span>
+            <div class="flex-1 h-3 bg-paper/5 overflow-hidden"><div class="stat-fill h-full" data-level="90" style="--bar-color: #ee4c2c; width: 0"></div></div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-serif text-xs tracking-widest w-28 shrink-0 text-paper/70">NEURAL NETS</span>
+            <div class="flex-1 h-3 bg-paper/5 overflow-hidden"><div class="stat-fill h-full" data-level="88" style="--bar-color: #c23030; width: 0"></div></div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-serif text-xs tracking-widest w-28 shrink-0 text-paper/70">AUTOMATION</span>
+            <div class="flex-1 h-3 bg-paper/5 overflow-hidden"><div class="stat-fill h-full" data-level="92" style="--bar-color: #b8960c; width: 0"></div></div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-serif text-xs tracking-widest w-28 shrink-0 text-paper/70">TYPESCRIPT</span>
+            <div class="flex-1 h-3 bg-paper/5 overflow-hidden"><div class="stat-fill h-full" data-level="85" style="--bar-color: #3178c6; width: 0"></div></div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-serif text-xs tracking-widest w-28 shrink-0 text-paper/70">REACT</span>
+            <div class="flex-1 h-3 bg-paper/5 overflow-hidden"><div class="stat-fill h-full" data-level="84" style="--bar-color: #61dafb; width: 0"></div></div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-serif text-xs tracking-widest w-28 shrink-0 text-paper/70">COMP. VISION</span>
+            <div class="flex-1 h-3 bg-paper/5 overflow-hidden"><div class="stat-fill h-full" data-level="82" style="--bar-color: #5c9c3c; width: 0"></div></div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-serif text-xs tracking-widest w-28 shrink-0 text-paper/70">PHP</span>
+            <div class="flex-1 h-3 bg-paper/5 overflow-hidden"><div class="stat-fill h-full" data-level="80" style="--bar-color: #777bb4; width: 0"></div></div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-serif text-xs tracking-widest w-28 shrink-0 text-paper/70">C++</span>
+            <div class="flex-1 h-3 bg-paper/5 overflow-hidden"><div class="stat-fill h-full" data-level="78" style="--bar-color: #00599c; width: 0"></div></div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-serif text-xs tracking-widest w-28 shrink-0 text-paper/70">NODE.JS</span>
+            <div class="flex-1 h-3 bg-paper/5 overflow-hidden"><div class="stat-fill h-full" data-level="80" style="--bar-color: #68a063; width: 0"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tech Arsenal -->
+      <div class="border border-paper/10 bg-paper/[0.03] p-8 relative reveal">
+        <div class="absolute top-3 right-3 font-serif text-[10px] tracking-[3px] text-paper/20 uppercase">Arsenal</div>
+        <h3 class="font-serif font-bold text-lg tracking-[3px] mb-6 text-vermillion kanji-flip" data-en="Technology"><span class="kanji-face">技術</span><span class="english-face">Technology</span></h3>
+        <div class="grid grid-cols-3 gap-3">
+          <div class="tech-card group text-center p-3 border border-paper/5 hover:border-vermillion/40 transition-all duration-500 hover:bg-vermillion/5 cursor-default">
+            <div class="mb-2 transition-transform duration-300 group-hover:scale-110">
+              <svg viewBox="0 0 50 50" class="w-9 h-9 mx-auto"><circle cx="25" cy="25" r="18" fill="none" stroke="#3776ab" stroke-width="2"/><text x="25" y="31" text-anchor="middle" font-size="14" font-weight="bold" fill="#ffd43b" font-family="serif">Py</text></svg>
+            </div>
+            <span class="font-serif text-[10px] tracking-wider text-paper/60">Python</span>
+          </div>
+          <div class="tech-card group text-center p-3 border border-paper/5 hover:border-vermillion/40 transition-all duration-500 hover:bg-vermillion/5 cursor-default">
+            <div class="mb-2 transition-transform duration-300 group-hover:scale-110">
+              <svg viewBox="0 0 50 50" class="w-9 h-9 mx-auto"><circle cx="15" cy="15" r="4" fill="#ee4c2c"/><circle cx="35" cy="15" r="4" fill="#ee4c2c"/><circle cx="25" cy="35" r="4" fill="#ee4c2c"/><line x1="15" y1="19" x2="25" y2="31" stroke="#ee4c2c" stroke-width="1.5"/><line x1="35" y1="19" x2="25" y2="31" stroke="#ee4c2c" stroke-width="1.5"/><line x1="19" y1="15" x2="31" y2="15" stroke="#ee4c2c" stroke-width="1.5"/></svg>
+            </div>
+            <span class="font-serif text-[10px] tracking-wider text-paper/60">PyTorch</span>
+          </div>
+          <div class="tech-card group text-center p-3 border border-paper/5 hover:border-vermillion/40 transition-all duration-500 hover:bg-vermillion/5 cursor-default">
+            <div class="mb-2 transition-transform duration-300 group-hover:scale-110">
+              <svg viewBox="0 0 50 50" class="w-9 h-9 mx-auto"><circle cx="25" cy="20" r="5" fill="#61dafb"/><ellipse cx="25" cy="20" rx="18" ry="7" fill="none" stroke="#61dafb" stroke-width="1.5"/><ellipse cx="25" cy="20" rx="18" ry="7" fill="none" stroke="#61dafb" stroke-width="1.5" transform="rotate(60 25 20)"/><ellipse cx="25" cy="20" rx="18" ry="7" fill="none" stroke="#61dafb" stroke-width="1.5" transform="rotate(120 25 20)"/><text x="25" y="45" text-anchor="middle" font-size="8" fill="#61dafb" font-family="serif">React</text></svg>
+            </div>
+            <span class="font-serif text-[10px] tracking-wider text-paper/60">React</span>
+          </div>
+          <div class="tech-card group text-center p-3 border border-paper/5 hover:border-vermillion/40 transition-all duration-500 hover:bg-vermillion/5 cursor-default">
+            <div class="mb-2 transition-transform duration-300 group-hover:scale-110">
+              <svg viewBox="0 0 50 50" class="w-9 h-9 mx-auto"><rect x="8" y="8" width="34" height="34" rx="3" fill="none" stroke="#3178c6" stroke-width="2"/><text x="25" y="31" text-anchor="middle" font-size="14" font-weight="bold" fill="#3178c6" font-family="serif">TS</text></svg>
+            </div>
+            <span class="font-serif text-[10px] tracking-wider text-paper/60">TypeScript</span>
+          </div>
+          <div class="tech-card group text-center p-3 border border-paper/5 hover:border-vermillion/40 transition-all duration-500 hover:bg-vermillion/5 cursor-default">
+            <div class="mb-2 transition-transform duration-300 group-hover:scale-110">
+              <svg viewBox="0 0 50 50" class="w-9 h-9 mx-auto"><circle cx="25" cy="22" r="12" fill="none" stroke="#5c9c3c" stroke-width="2"/><circle cx="25" cy="22" r="5" fill="none" stroke="#5c9c3c" stroke-width="1.5"/><line x1="25" y1="10" x2="25" y2="17" stroke="#5c9c3c" stroke-width="1.5"/><line x1="25" y1="27" x2="25" y2="34" stroke="#5c9c3c" stroke-width="1.5"/><line x1="13" y1="22" x2="20" y2="22" stroke="#5c9c3c" stroke-width="1.5"/><line x1="30" y1="22" x2="37" y2="22" stroke="#5c9c3c" stroke-width="1.5"/><text x="25" y="46" text-anchor="middle" font-size="7" fill="#5c9c3c" font-family="serif">CV</text></svg>
+            </div>
+            <span class="font-serif text-[10px] tracking-wider text-paper/60">OpenCV</span>
+          </div>
+          <div class="tech-card group text-center p-3 border border-paper/5 hover:border-vermillion/40 transition-all duration-500 hover:bg-vermillion/5 cursor-default">
+            <div class="mb-2 transition-transform duration-300 group-hover:scale-110">
+              <svg viewBox="0 0 50 50" class="w-9 h-9 mx-auto"><polygon points="25,5 45,40 5,40" fill="none" stroke="#68a063" stroke-width="2"/><text x="25" y="33" text-anchor="middle" font-size="11" font-weight="bold" fill="#68a063" font-family="serif">N</text></svg>
+            </div>
+            <span class="font-serif text-[10px] tracking-wider text-paper/60">Node.js</span>
+          </div>
+          <div class="tech-card group text-center p-3 border border-paper/5 hover:border-vermillion/40 transition-all duration-500 hover:bg-vermillion/5 cursor-default">
+            <div class="mb-2 transition-transform duration-300 group-hover:scale-110">
+              <svg viewBox="0 0 50 50" class="w-9 h-9 mx-auto"><circle cx="25" cy="22" r="15" fill="none" stroke="#777bb4" stroke-width="2"/><text x="25" y="27" text-anchor="middle" font-size="11" font-weight="bold" fill="#777bb4" font-family="serif">P</text></svg>
+            </div>
+            <span class="font-serif text-[10px] tracking-wider text-paper/60">PHP</span>
+          </div>
+          <div class="tech-card group text-center p-3 border border-paper/5 hover:border-vermillion/40 transition-all duration-500 hover:bg-vermillion/5 cursor-default">
+            <div class="mb-2 transition-transform duration-300 group-hover:scale-110">
+              <svg viewBox="0 0 50 50" class="w-9 h-9 mx-auto"><rect x="10" y="15" width="30" height="20" rx="2" fill="none" stroke="#2496ed" stroke-width="2"/><rect x="13" y="18" width="6" height="5" fill="#2496ed" opacity="0.7"/><rect x="22" y="18" width="6" height="5" fill="#2496ed" opacity="0.7"/><rect x="31" y="18" width="6" height="5" fill="#2496ed" opacity="0.7"/><rect x="17" y="10" width="6" height="5" fill="#2496ed" opacity="0.5"/><rect x="27" y="10" width="6" height="5" fill="#2496ed" opacity="0.5"/><text x="25" y="46" text-anchor="middle" font-size="7" fill="#2496ed" font-family="serif">SQLite</text></svg>
+            </div>
+            <span class="font-serif text-[10px] tracking-wider text-paper/60">SQLite</span>
+          </div>
+          <div class="tech-card group text-center p-3 border border-paper/5 hover:border-vermillion/40 transition-all duration-500 hover:bg-vermillion/5 cursor-default">
+            <div class="mb-2 transition-transform duration-300 group-hover:scale-110">
+              <svg viewBox="0 0 50 50" class="w-9 h-9 mx-auto"><circle cx="20" cy="25" r="14" fill="none" stroke="#00599c" stroke-width="2"/><text x="20" y="30" text-anchor="middle" font-size="12" font-weight="bold" fill="#00599c" font-family="serif">C</text><text x="40" y="22" text-anchor="middle" font-size="14" font-weight="bold" fill="#00599c" font-family="serif">+</text><text x="40" y="34" text-anchor="middle" font-size="14" font-weight="bold" fill="#00599c" font-family="serif">+</text></svg>
+            </div>
+            <span class="font-serif text-[10px] tracking-wider text-paper/60">C++</span>
+          </div>
+          <div class="tech-card group text-center p-3 border border-paper/5 hover:border-vermillion/40 transition-all duration-500 hover:bg-vermillion/5 cursor-default">
+            <div class="mb-2 transition-transform duration-300 group-hover:scale-110">
+              <svg viewBox="0 0 50 50" class="w-9 h-9 mx-auto"><circle cx="18" cy="16" r="4" fill="#f05032"/><circle cx="32" cy="16" r="4" fill="#f05032"/><circle cx="25" cy="33" r="4" fill="#f05032"/><line x1="18" y1="20" x2="25" y2="29" stroke="#f05032" stroke-width="1.5"/><line x1="32" y1="20" x2="25" y2="29" stroke="#f05032" stroke-width="1.5"/><line x1="22" y1="16" x2="28" y2="16" stroke="#f05032" stroke-width="1.5"/></svg>
+            </div>
+            <span class="font-serif text-[10px] tracking-wider text-paper/60">Git</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ WORKS — 第四章 ═══ -->
+  <section class="px-4 md:px-8 pb-20 pt-12" id="works">
+    <div class="text-center mb-12">
+      <span class="font-serif text-xs tracking-[6px] text-vermillion uppercase kanji-flip" data-en="Chapter 3"><span class="kanji-face">第三章</span><span class="english-face">Chapter 3</span></span>
+      <h2 class="font-serif font-black text-[clamp(1.8rem,4vw,3rem)] tracking-wider mt-2 section-title-brush">Works</h2>
+    </div>
+
+    <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-1">
+      <!-- Project 1: Crime Alert App -->
+      <div class="manga-panel group border-[3px] border-sumi bg-white relative overflow-hidden reveal cursor-pointer" data-volume="1">
+        <div class="p-0">
+          <div class="h-48 bg-gradient-to-br from-vermillion-dark to-vermillion relative overflow-hidden">
+            <svg viewBox="0 0 200 180" class="w-full h-full opacity-30">
+              <circle cx="100" cy="70" r="40" fill="none" stroke="#fff" stroke-width="2"/>
+              <text x="100" y="80" text-anchor="middle" fill="#fff" font-size="36" font-weight="bold">!</text>
+              <rect x="50" y="120" width="100" height="3" fill="#fff" opacity="0.3"/>
+              <rect x="60" y="130" width="80" height="3" fill="#fff" opacity="0.2"/>
+              <circle cx="40" cy="40" r="3" fill="#fff" opacity="0.2"/><circle cx="160" cy="50" r="2" fill="#fff" opacity="0.15"/>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="font-serif font-black text-white text-lg tracking-[4px]">CRIME ALERT</span>
+            </div>
+            <div class="absolute top-2 right-2 bg-ink/60 px-2 py-0.5"><span class="font-serif text-[9px] tracking-wider text-paper/80">VOL.01</span></div>
+          </div>
+          <div class="p-5">
+            <h3 class="font-serif font-bold text-sm tracking-wider mb-2">Crime Alert App</h3>
+            <p class="text-xs text-ash leading-relaxed mb-3">A community safety application built with Vue.js for reporting and tracking criminal activity in real-time.</p>
+            <div class="flex gap-1.5 flex-wrap">
+              <span class="text-[9px] px-1.5 py-0.5 bg-sumi/5 text-ash tracking-wider font-serif">Vue</span>
+              <span class="text-[9px] px-1.5 py-0.5 bg-sumi/5 text-ash tracking-wider font-serif">JavaScript</span>
+            </div>
+          </div>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-vermillion scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+      </div>
+
+      <!-- Project 2: Vue EOMP Portfolio -->
+      <div class="manga-panel group border-[3px] border-sumi bg-white relative overflow-hidden reveal cursor-pointer" data-volume="2">
+        <div class="p-0">
+          <div class="h-48 bg-gradient-to-br from-indigo to-[#2a3f6e] relative overflow-hidden">
+            <svg viewBox="0 0 200 180" class="w-full h-full opacity-30">
+              <rect x="40" y="40" width="120" height="80" rx="6" fill="none" stroke="#fff" stroke-width="2"/>
+              <circle cx="70" cy="80" r="15" fill="none" stroke="#fff" stroke-width="1.5" opacity="0.6"/>
+              <line x1="95" y1="65" x2="145" y2="65" stroke="#fff" stroke-width="2" opacity="0.4"/>
+              <line x1="95" y1="78" x2="135" y2="78" stroke="#fff" stroke-width="1.5" opacity="0.3"/>
+              <line x1="95" y1="90" x2="140" y2="90" stroke="#fff" stroke-width="1.5" opacity="0.3"/>
+              <rect x="40" y="130" width="35" height="25" rx="2" fill="none" stroke="#fff" stroke-width="1" opacity="0.3"/>
+              <rect x="83" y="130" width="35" height="25" rx="2" fill="none" stroke="#fff" stroke-width="1" opacity="0.3"/>
+              <rect x="125" y="130" width="35" height="25" rx="2" fill="none" stroke="#fff" stroke-width="1" opacity="0.3"/>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="font-serif font-black text-white text-lg tracking-[4px]">PORTFOLIO</span>
+            </div>
+            <div class="absolute top-2 right-2 bg-ink/60 px-2 py-0.5"><span class="font-serif text-[9px] tracking-wider text-paper/80">VOL.02</span></div>
+          </div>
+          <div class="p-5">
+            <h3 class="font-serif font-bold text-sm tracking-wider mb-2">Vue EOMP Portfolio</h3>
+            <p class="text-xs text-ash leading-relaxed mb-3">A dynamic portfolio web application showcasing projects and skills, built with Vue.js component architecture.</p>
+            <div class="flex gap-1.5 flex-wrap">
+              <span class="text-[9px] px-1.5 py-0.5 bg-sumi/5 text-ash tracking-wider font-serif">Vue</span>
+              <span class="text-[9px] px-1.5 py-0.5 bg-sumi/5 text-ash tracking-wider font-serif">CSS</span>
+            </div>
+          </div>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-vermillion scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+      </div>
+
+      <!-- Project 3: Capstone EOMP -->
+      <div class="manga-panel group border-[3px] border-sumi bg-white relative overflow-hidden reveal cursor-pointer" data-volume="3">
+        <div class="p-0">
+          <div class="h-48 bg-gradient-to-br from-[#2d4a1e] to-[#4a7a30] relative overflow-hidden">
+            <svg viewBox="0 0 200 180" class="w-full h-full opacity-30">
+              <rect x="30" y="35" width="140" height="90" rx="4" fill="none" stroke="#fff" stroke-width="2"/>
+              <polyline points="45,100 65,70 85,85 105,50 125,75 145,40 155,55" fill="none" stroke="#fff" stroke-width="2"/>
+              <rect x="40" y="140" width="20" height="20" fill="#fff" opacity="0.2"/>
+              <rect x="70" y="135" width="20" height="25" fill="#fff" opacity="0.15"/>
+              <rect x="100" y="130" width="20" height="30" fill="#fff" opacity="0.2"/>
+              <rect x="130" y="125" width="20" height="35" fill="#fff" opacity="0.15"/>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="font-serif font-black text-white text-lg tracking-[4px]">CAPSTONE</span>
+            </div>
+            <div class="absolute top-2 right-2 bg-ink/60 px-2 py-0.5"><span class="font-serif text-[9px] tracking-wider text-paper/80">VOL.03</span></div>
+          </div>
+          <div class="p-5">
+            <h3 class="font-serif font-bold text-sm tracking-wider mb-2">Capstone EOMP</h3>
+            <p class="text-xs text-ash leading-relaxed mb-3">Full capstone end-of-module project demonstrating comprehensive JavaScript and web development skills.</p>
+            <div class="flex gap-1.5 flex-wrap">
+              <span class="text-[9px] px-1.5 py-0.5 bg-sumi/5 text-ash tracking-wider font-serif">JavaScript</span>
+              <span class="text-[9px] px-1.5 py-0.5 bg-sumi/5 text-ash tracking-wider font-serif">Node.js</span>
+            </div>
+          </div>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-vermillion scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+      </div>
+
+      <!-- Project 4: E-Commerce -->
+      <div class="manga-panel group border-[3px] border-sumi bg-white relative overflow-hidden reveal cursor-pointer" data-volume="4">
+        <div class="p-0">
+          <div class="h-48 bg-gradient-to-br from-[#4a2040] to-[#7a3065] relative overflow-hidden">
+            <svg viewBox="0 0 200 180" class="w-full h-full opacity-30">
+              <rect x="50" y="50" width="100" height="70" rx="5" fill="none" stroke="#fff" stroke-width="2"/>
+              <path d="M70,90 L85,75 L100,90 L115,70 L130,85" fill="none" stroke="#fff" stroke-width="1.5"/>
+              <circle cx="80" cy="140" r="8" fill="none" stroke="#fff" stroke-width="1.5"/>
+              <circle cx="120" cy="140" r="8" fill="none" stroke="#fff" stroke-width="1.5"/>
+              <line x1="80" y1="132" x2="80" y2="125" stroke="#fff" stroke-width="1"/>
+              <line x1="120" y1="132" x2="120" y2="125" stroke="#fff" stroke-width="1"/>
+              <line x1="60" y1="125" x2="140" y2="125" stroke="#fff" stroke-width="1.5" opacity="0.4"/>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="font-serif font-black text-white text-lg tracking-[4px]">E-COMMERCE</span>
+            </div>
+            <div class="absolute top-2 right-2 bg-ink/60 px-2 py-0.5"><span class="font-serif text-[9px] tracking-wider text-paper/80">VOL.04</span></div>
+          </div>
+          <div class="p-5">
+            <h3 class="font-serif font-bold text-sm tracking-wider mb-2">E-Commerce Store</h3>
+            <p class="text-xs text-ash leading-relaxed mb-3">Online store with product listings, cart functionality, and a responsive storefront experience.</p>
+            <div class="flex gap-1.5 flex-wrap">
+              <span class="text-[9px] px-1.5 py-0.5 bg-sumi/5 text-ash tracking-wider font-serif">HTML</span>
+              <span class="text-[9px] px-1.5 py-0.5 bg-sumi/5 text-ash tracking-wider font-serif">CSS</span>
+              <span class="text-[9px] px-1.5 py-0.5 bg-sumi/5 text-ash tracking-wider font-serif">JS</span>
+            </div>
+          </div>
+        </div>
+        <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-vermillion scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+      </div>
+    </div>
+
+    <!-- More projects link -->
+    <div class="text-center mt-8">
+      <a href="https://github.com/Muakhir?tab=repositories" target="_blank" rel="noopener" class="inline-block font-serif text-xs tracking-[5px] uppercase text-ash border-b border-sumi/20 pb-1 hover:text-vermillion hover:border-vermillion transition-colors duration-300">
+        View All 36 Repositories →
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══ FAN ART GALLERY — 第五章 ═══ -->
+  <section class="px-4 md:px-8 pb-20 bg-ink" id="gallery">
+    <svg class="w-full -mt-1" viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,0 L0,40 Q720,60 1440,25 L1440,0 Z" fill="#f5f0e8"/>
+    </svg>
+    <div class="text-center mb-12 pt-8">
+      <span class="font-serif text-xs tracking-[6px] text-vermillion uppercase kanji-flip" data-en="Chapter 4"><span class="kanji-face">第四章</span><span class="english-face">Chapter 4</span></span>
+      <h2 class="font-serif font-black text-[clamp(1.8rem,4vw,3rem)] tracking-wider mt-2 text-paper section-title-brush-light">Gallery</h2>
+      <p class="font-serif text-xs text-paper/30 tracking-[3px] mt-2">Fan Art Collection</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 max-w-6xl mx-auto">
+
+      <!-- Art 1: Moonlit Blade — Sumi-e style -->
+      <div class="group border border-paper/10 overflow-hidden relative cursor-pointer transition-all duration-500 hover:border-vermillion/40 sm:row-span-2 reveal" data-art="1">
+        <svg viewBox="0 0 300 500" class="w-full block">
+          <defs>
+            <radialGradient id="moonG" cx="70%" cy="20%" r="35%"><stop offset="0%" stop-color="#e8e0d0" stop-opacity="0.8"/><stop offset="100%" stop-color="#0a0a0f" stop-opacity="0"/></radialGradient>
+            <filter id="ink1"><feGaussianBlur stdDeviation="1.5"/></filter>
+          </defs>
+          <rect width="300" height="500" fill="#0a0a0f"/>
+          <!-- Moon -->
+          <circle cx="220" cy="90" r="45" fill="url(#moonG)"/><circle cx="238" cy="78" r="42" fill="#0a0a0f"/>
+          <!-- Mountain silhouettes -->
+          <polygon points="0,350 80,200 160,350" fill="#111118" opacity="0.8"/>
+          <polygon points="100,350 200,180 300,350" fill="#0f0f16" opacity="0.6"/>
+          <!-- Bamboo -->
+          <line x1="60" y1="500" x2="55" y2="100" stroke="#1a2a1a" stroke-width="5" opacity="0.7"/>
+          <line x1="58" y1="180" x2="30" y2="140" stroke="#1a2a1a" stroke-width="2" opacity="0.5"/>
+          <line x1="56" y1="250" x2="25" y2="220" stroke="#1a2a1a" stroke-width="2" opacity="0.5"/>
+          <line x1="57" y1="320" x2="80" y2="290" stroke="#1a2a1a" stroke-width="2" opacity="0.4"/>
+          <!-- Samurai silhouette -->
+          <path d="M150,350 L145,290 Q140,270 150,260 Q160,250 155,230 L152,210 Q148,195 155,185 L158,175" fill="#0f0f14" stroke="#1a1a24" stroke-width="2"/>
+          <!-- Head -->
+          <circle cx="156" cy="168" r="14" fill="#0f0f14"/>
+          <!-- Katana -->
+          <line x1="165" y1="250" x2="250" y2="150" stroke="#4a4a5a" stroke-width="2.5"/>
+          <line x1="165" y1="250" x2="250" y2="150" stroke="#8a8a9a" stroke-width="1" opacity="0.5"/>
+          <!-- Cherry petals -->
+          <ellipse cx="100" cy="130" rx="3" ry="1.5" fill="#c23030" opacity="0.5" class="petal p1" transform="rotate(30 100 130)"/>
+          <ellipse cx="200" cy="200" rx="2.5" ry="1.2" fill="#c23030" opacity="0.4" class="petal p2" transform="rotate(-20 200 200)"/>
+          <ellipse cx="130" cy="300" rx="2" ry="1" fill="#c23030" opacity="0.3" class="petal p3" transform="rotate(60 130 300)"/>
+          <ellipse cx="240" cy="280" rx="3" ry="1.5" fill="#c23030" opacity="0.35" class="petal p4" transform="rotate(45 240 280)"/>
+          <ellipse cx="180" cy="400" rx="2" ry="1" fill="#c23030" opacity="0.2" class="petal p1"/>
+          <!-- Mist -->
+          <rect x="0" y="340" width="300" height="40" fill="#0a0a0f" opacity="0.3" filter="url(#ink1)"/>
+          <text x="280" y="480" text-anchor="end" fill="#4a4a5a" font-family="Noto Serif JP" font-size="11" opacity="0.4" class="svg-kanji"><tspan class="kanji-text">月下の剣士</tspan></text>
+          <text x="280" y="480" text-anchor="end" fill="#c23030" font-family="Shippori Mincho" font-size="9" opacity="0" class="svg-english">Swordsman Under the Moon</text>
+        </svg>
+        <div class="absolute bottom-0 left-0 right-0 px-4 py-3 bg-gradient-to-t from-ink to-transparent">
+          <span class="font-serif text-xs tracking-[4px] text-paper/40 group-hover:text-paper/70 transition-colors">MOONLIT RONIN</span>
+        </div>
+      </div>
+
+      <!-- Art 2: Torii Gate at dusk -->
+      <div class="group border border-paper/10 overflow-hidden relative cursor-pointer transition-all duration-500 hover:border-vermillion/40 lg:col-span-2 reveal" data-art="2">
+        <svg viewBox="0 0 500 280" class="w-full block">
+          <defs>
+            <linearGradient id="duskSky" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#1a0a2e"/><stop offset="40%" stop-color="#3a1530"/><stop offset="70%" stop-color="#8a3020"/><stop offset="100%" stop-color="#c05020"/></linearGradient>
+          </defs>
+          <rect width="500" height="280" fill="url(#duskSky)"/>
+          <!-- Sun -->
+          <circle cx="250" cy="210" r="45" fill="#e06030" opacity="0.7"/>
+          <circle cx="250" cy="210" r="35" fill="#f08040" opacity="0.5"/>
+          <!-- Water reflection -->
+          <rect x="0" y="210" width="500" height="70" fill="#0a0515" opacity="0.5"/>
+          <line x1="150" y1="230" x2="200" y2="230" stroke="#f08040" stroke-width="1" opacity="0.2"/>
+          <line x1="280" y1="240" x2="350" y2="240" stroke="#f08040" stroke-width="1" opacity="0.15"/>
+          <line x1="200" y1="255" x2="300" y2="255" stroke="#f08040" stroke-width="1" opacity="0.1"/>
+          <!-- Torii gate -->
+          <rect x="195" y="100" width="8" height="120" fill="#1a0a0a"/>
+          <rect x="297" y="100" width="8" height="120" fill="#1a0a0a"/>
+          <rect x="180" y="95" width="140" height="10" rx="2" fill="#1a0a0a"/>
+          <rect x="185" y="115" width="130" height="6" fill="#1a0a0a"/>
+          <rect x="180" y="88" width="140" height="8" rx="4" fill="#2a0a0a"/>
+          <!-- Distant torii -->
+          <rect x="380" y="160" width="4" height="55" fill="#1a0a15" opacity="0.5"/>
+          <rect x="410" y="160" width="4" height="55" fill="#1a0a15" opacity="0.5"/>
+          <rect x="375" y="157" width="44" height="5" rx="1" fill="#1a0a15" opacity="0.5"/>
+          <!-- Birds -->
+          <path d="M120,60 Q125,55 130,60" fill="none" stroke="#1a1a2e" stroke-width="1.5" opacity="0.4"/>
+          <path d="M140,50 Q145,45 150,50" fill="none" stroke="#1a1a2e" stroke-width="1.5" opacity="0.3"/>
+          <path d="M155,65 Q160,60 165,65" fill="none" stroke="#1a1a2e" stroke-width="1" opacity="0.25"/>
+          <!-- Stars -->
+          <circle cx="80" cy="30" r="1" fill="#fff" opacity="0.4"/><circle cx="400" cy="40" r="1" fill="#fff" opacity="0.3"/>
+          <circle cx="300" cy="20" r="0.8" fill="#fff" opacity="0.35"/><circle cx="450" cy="60" r="1" fill="#fff" opacity="0.25"/>
+          <text x="480" y="268" text-anchor="end" fill="#4a3020" font-family="Noto Serif JP" font-size="11" opacity="0.5" class="svg-kanji">黄昏の鳥居</text>
+          <text x="480" y="268" text-anchor="end" fill="#c23030" font-family="Shippori Mincho" font-size="9" opacity="0" class="svg-english">Twilight Torii</text>
+        </svg>
+        <div class="absolute bottom-0 left-0 right-0 px-4 py-3 bg-gradient-to-t from-ink to-transparent">
+          <span class="font-serif text-xs tracking-[4px] text-paper/40 group-hover:text-paper/70 transition-colors">TWILIGHT TORII</span>
+        </div>
+      </div>
+
+      <!-- Art 3: Dragon (ink wash style) -->
+      <div class="group border border-paper/10 overflow-hidden relative cursor-pointer transition-all duration-500 hover:border-vermillion/40 aspect-square reveal" data-art="3">
+        <svg viewBox="0 0 300 300" class="w-full h-full block">
+          <rect width="300" height="300" fill="#0a0a0f"/>
+          <!-- Ink cloud background -->
+          <circle cx="150" cy="120" r="80" fill="#141420" opacity="0.5"/>
+          <circle cx="200" cy="180" r="60" fill="#101018" opacity="0.4"/>
+          <!-- Dragon body — brush stroke style -->
+          <path d="M60,280 Q40,220 80,170 Q120,120 160,140 Q200,160 190,110 Q175,70 210,50" fill="none" stroke="#3a3a4a" stroke-width="16" stroke-linecap="round" opacity="0.8"/>
+          <path d="M60,280 Q40,220 80,170 Q120,120 160,140 Q200,160 190,110 Q175,70 210,50" fill="none" stroke="#4a4a5a" stroke-width="8" stroke-linecap="round" opacity="0.5"/>
+          <!-- Dragon head -->
+          <path d="M210,50 Q230,35 250,45 Q245,55 235,50" fill="#3a3a4a"/>
+          <!-- Eye -->
+          <circle cx="232" cy="43" r="3" fill="#c23030"/><circle cx="233" cy="43" r="1.2" fill="#0a0a0f"/>
+          <!-- Whiskers -->
+          <path d="M245,48 Q265,40 280,35" fill="none" stroke="#3a3a4a" stroke-width="1" opacity="0.5"/>
+          <path d="M248,52 Q268,50 285,45" fill="none" stroke="#3a3a4a" stroke-width="1" opacity="0.4"/>
+          <!-- Claws -->
+          <path d="M160,140 L150,155 L145,148" fill="none" stroke="#4a4a5a" stroke-width="1.5"/>
+          <!-- Mist swirls -->
+          <circle cx="100" cy="200" r="25" fill="#141420" opacity="0.3"/>
+          <circle cx="200" cy="250" r="20" fill="#101018" opacity="0.25"/>
+          <text x="280" y="285" text-anchor="end" fill="#3a3a4a" font-family="Noto Serif JP" font-size="11" opacity="0.4" class="svg-kanji">龍</text>
+          <text x="280" y="285" text-anchor="end" fill="#c23030" font-family="Shippori Mincho" font-size="9" opacity="0" class="svg-english">Dragon</text>
+        </svg>
+        <div class="absolute bottom-0 left-0 right-0 px-4 py-3 bg-gradient-to-t from-ink to-transparent">
+          <span class="font-serif text-xs tracking-[4px] text-paper/40 group-hover:text-paper/70 transition-colors">INK DRAGON</span>
+        </div>
+      </div>
+
+      <!-- Art 4: Koi Fish -->
+      <div class="group border border-paper/10 overflow-hidden relative cursor-pointer transition-all duration-500 hover:border-vermillion/40 aspect-square reveal" data-art="4">
+        <svg viewBox="0 0 300 300" class="w-full h-full block">
+          <rect width="300" height="300" fill="#0a0f1a"/>
+          <!-- Water ripples -->
+          <circle cx="150" cy="150" r="120" fill="none" stroke="#1a2a3a" stroke-width="0.5" opacity="0.3"/>
+          <circle cx="150" cy="150" r="90" fill="none" stroke="#1a2a3a" stroke-width="0.5" opacity="0.25"/>
+          <circle cx="150" cy="150" r="60" fill="none" stroke="#1a2a3a" stroke-width="0.5" opacity="0.2"/>
+          <!-- Koi 1 (red) -->
+          <path d="M100,120 Q130,100 160,120 Q175,130 170,145 Q160,160 140,155 Q120,150 110,140 Q95,130 100,120" fill="#8b1a1a"/>
+          <path d="M100,120 Q115,110 130,115" fill="none" stroke="#c23030" stroke-width="2" opacity="0.6"/>
+          <circle cx="120" cy="122" r="4" fill="#0a0a0f"/><circle cx="121" cy="121" r="1.5" fill="#1a2a3a"/>
+          <!-- Tail 1 -->
+          <path d="M165,130 Q185,120 190,105 Q180,115 170,125" fill="#6a1515" opacity="0.7"/>
+          <path d="M165,135 Q185,140 188,155 Q178,142 168,135" fill="#6a1515" opacity="0.7"/>
+          <!-- Koi 2 (white/gold) -->
+          <path d="M180,200 Q155,180 130,195 Q115,205 120,220 Q130,235 150,230 Q170,225 180,215 Q195,205 180,200" fill="#c5b080"/>
+          <path d="M180,200 Q168,190 155,193" fill="none" stroke="#d4c090" stroke-width="2" opacity="0.5"/>
+          <circle cx="165" cy="203" r="4" fill="#0a0a0f"/><circle cx="166" cy="202" r="1.5" fill="#1a2a3a"/>
+          <!-- Tail 2 -->
+          <path d="M125,210 Q105,200 100,185 Q110,198 122,206" fill="#a09060" opacity="0.7"/>
+          <path d="M122,215 Q105,220 98,235 Q110,222 120,217" fill="#a09060" opacity="0.7"/>
+          <!-- Lily pad -->
+          <ellipse cx="220" cy="100" rx="25" ry="15" fill="#1a2a1a" opacity="0.5"/>
+          <path d="M220,100 L220,85" fill="none" stroke="#1a2a1a" stroke-width="1" opacity="0.3"/>
+          <!-- Bubbles -->
+          <circle cx="140" cy="165" r="2" fill="none" stroke="#2a3a4a" stroke-width="0.5" opacity="0.3"/>
+          <circle cx="155" cy="170" r="1.5" fill="none" stroke="#2a3a4a" stroke-width="0.5" opacity="0.25"/>
+          <text x="280" y="285" text-anchor="end" fill="#4a5a6a" font-family="Noto Serif JP" font-size="11" opacity="0.4" class="svg-kanji">錦鯉</text>
+          <text x="280" y="285" text-anchor="end" fill="#c23030" font-family="Shippori Mincho" font-size="9" opacity="0" class="svg-english">Koi Fish</text>
+        </svg>
+        <div class="absolute bottom-0 left-0 right-0 px-4 py-3 bg-gradient-to-t from-ink to-transparent">
+          <span class="font-serif text-xs tracking-[4px] text-paper/40 group-hover:text-paper/70 transition-colors">KOI</span>
+        </div>
+      </div>
+
+      <!-- Art 5: Anime Eye — mature style -->
+      <div class="group border border-paper/10 overflow-hidden relative cursor-pointer transition-all duration-500 hover:border-vermillion/40 lg:col-span-2 reveal" data-art="5">
+        <svg viewBox="0 0 500 250" class="w-full block">
+          <defs>
+            <radialGradient id="irisG2" cx="48%" cy="42%" r="45%"><stop offset="0%" stop-color="#c23030"/><stop offset="50%" stop-color="#6a1515"/><stop offset="100%" stop-color="#1a0a0a"/></radialGradient>
+            <filter id="iGlow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <rect width="500" height="250" fill="#0a0a0f"/>
+          <!-- Upper lid -->
+          <path d="M80,130 Q250,40 420,130" fill="#0a0a0f" stroke="#2a2a2a" stroke-width="3"/>
+          <!-- Lower lid -->
+          <path d="M95,140 Q250,200 405,140" fill="#0a0a0f" stroke="#2a2a2a" stroke-width="2"/>
+          <!-- Sclera -->
+          <ellipse cx="250" cy="133" rx="140" ry="48" fill="#1a1a20"/>
+          <ellipse cx="250" cy="133" rx="130" ry="42" fill="#1f1f28"/>
+          <!-- Iris -->
+          <circle cx="250" cy="130" r="38" fill="url(#irisG2)" filter="url(#iGlow)"/>
+          <!-- Iris detail -->
+          <circle cx="250" cy="130" r="32" fill="none" stroke="#8b1a1a" stroke-width="0.5" opacity="0.4"/>
+          <line x1="250" y1="95" x2="250" y2="112" stroke="#c23030" stroke-width="0.5" opacity="0.3"/>
+          <line x1="225" y1="108" x2="238" y2="118" stroke="#c23030" stroke-width="0.5" opacity="0.25"/>
+          <line x1="275" y1="108" x2="262" y2="118" stroke="#c23030" stroke-width="0.5" opacity="0.25"/>
+          <!-- Pupil -->
+          <circle cx="250" cy="130" r="14" fill="#050508"/>
+          <!-- Reflections -->
+          <ellipse cx="240" cy="118" rx="7" ry="9" fill="#2a2a35" opacity="0.6"/>
+          <circle cx="262" cy="124" r="3.5" fill="#2a2a35" opacity="0.4"/>
+          <!-- Thick lid line -->
+          <path d="M75,132 Q250,30 425,132" fill="none" stroke="#0a0a0f" stroke-width="6"/>
+          <!-- Lashes — refined -->
+          <path d="M80,130 Q78,115 72,105" fill="none" stroke="#0a0a0f" stroke-width="2.5"/>
+          <path d="M105,115 Q100,100 95,90" fill="none" stroke="#0a0a0f" stroke-width="2"/>
+          <path d="M135,105 Q128,90 125,82" fill="none" stroke="#0a0a0f" stroke-width="1.5"/>
+          <path d="M395,115 Q400,100 405,90" fill="none" stroke="#0a0a0f" stroke-width="2"/>
+          <path d="M415,128 Q420,112 428,105" fill="none" stroke="#0a0a0f" stroke-width="2.5"/>
+          <!-- Brow — sharp, angular -->
+          <path d="M100,80 Q250,35 400,80" fill="none" stroke="#0a0a0f" stroke-width="5" stroke-linecap="round"/>
+          <text x="480" y="238" text-anchor="end" fill="#3a2020" font-family="Noto Serif JP" font-size="11" opacity="0.4" class="svg-kanji">瞳</text>
+          <text x="480" y="238" text-anchor="end" fill="#c23030" font-family="Shippori Mincho" font-size="9" opacity="0" class="svg-english">The Gaze</text>
+        </svg>
+        <div class="absolute bottom-0 left-0 right-0 px-4 py-3 bg-gradient-to-t from-ink to-transparent">
+          <span class="font-serif text-xs tracking-[4px] text-paper/40 group-hover:text-paper/70 transition-colors">THE GAZE — 瞳</span>
+        </div>
+      </div>
+
+      <!-- Art 6: Mecha — darker style -->
+      <div class="group border border-paper/10 overflow-hidden relative cursor-pointer transition-all duration-500 hover:border-vermillion/40 reveal" data-art="6">
+        <svg viewBox="0 0 300 350" class="w-full block">
+          <defs>
+            <linearGradient id="mechBg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#0a0a15"/><stop offset="100%" stop-color="#0f0f1a"/></linearGradient>
+            <filter id="gM"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <rect width="300" height="350" fill="url(#mechBg)"/>
+          <!-- Rain -->
+          <line x1="50" y1="0" x2="45" y2="30" stroke="#2a3a4a" stroke-width="0.5" opacity="0.3"/>
+          <line x1="120" y1="10" x2="115" y2="50" stroke="#2a3a4a" stroke-width="0.5" opacity="0.25"/>
+          <line x1="200" y1="5" x2="195" y2="35" stroke="#2a3a4a" stroke-width="0.5" opacity="0.3"/>
+          <line x1="260" y1="20" x2="255" y2="60" stroke="#2a3a4a" stroke-width="0.5" opacity="0.2"/>
+          <line x1="80" y1="60" x2="75" y2="100" stroke="#2a3a4a" stroke-width="0.5" opacity="0.25"/>
+          <line x1="170" y1="40" x2="165" y2="80" stroke="#2a3a4a" stroke-width="0.5" opacity="0.2"/>
+          <!-- Mecha head -->
+          <polygon points="130,100 125,140 175,140 170,100" fill="#1a1a25"/>
+          <!-- Visor -->
+          <polygon points="133,112 135,130 165,130 167,112" fill="#c23030" opacity="0.6" filter="url(#gM)"/>
+          <polygon points="135,114 136,128 164,128 165,114" fill="#c23030" opacity="0.3"/>
+          <!-- Antenna -->
+          <polygon points="150,100 146,80 154,80" fill="#c23030" opacity="0.5"/>
+          <!-- Shoulders -->
+          <rect x="100" y="138" width="30" height="20" rx="2" fill="#1a1a25"/>
+          <rect x="170" y="138" width="30" height="20" rx="2" fill="#1a1a25"/>
+          <!-- Torso -->
+          <polygon points="120,140 110,220 190,220 180,140" fill="#15151f"/>
+          <!-- Chest core -->
+          <circle cx="150" cy="175" r="8" fill="#c23030" opacity="0.4" filter="url(#gM)"/>
+          <circle cx="150" cy="175" r="4" fill="#c23030" opacity="0.2"/>
+          <!-- Arms -->
+          <polygon points="105,148 90,210 102,212 112,155" fill="#15151f"/>
+          <polygon points="195,148 210,210 198,212 188,155" fill="#15151f"/>
+          <!-- Legs -->
+          <polygon points="125,218 118,310 140,310 142,218" fill="#111118"/>
+          <polygon points="175,218 168,310 182,310 185,218" fill="#111118"/>
+          <!-- Ground mist -->
+          <rect x="0" y="300" width="300" height="50" fill="#0a0a15" opacity="0.5"/>
+          <ellipse cx="150" cy="310" rx="100" ry="15" fill="#1a1a25" opacity="0.3"/>
+          <text x="280" y="338" text-anchor="end" fill="#2a2a3a" font-family="Noto Serif JP" font-size="11" opacity="0.4" class="svg-kanji">機体</text>
+          <text x="280" y="338" text-anchor="end" fill="#c23030" font-family="Shippori Mincho" font-size="9" opacity="0" class="svg-english">Mecha Unit</text>
+        </svg>
+        <div class="absolute bottom-0 left-0 right-0 px-4 py-3 bg-gradient-to-t from-ink to-transparent">
+          <span class="font-serif text-xs tracking-[4px] text-paper/40 group-hover:text-paper/70 transition-colors">UNIT-07 — 機体</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CONTACT — 最終章 ═══ -->
+  <section class="px-4 md:px-8 pb-20 pt-12" id="contact">
+    <div class="text-center mb-12">
+      <span class="font-serif text-xs tracking-[6px] text-vermillion uppercase kanji-flip" data-en="Final Chapter"><span class="kanji-face">最終章</span><span class="english-face">Final Chapter</span></span>
+      <h2 class="font-serif font-black text-[clamp(1.8rem,4vw,3rem)] tracking-wider mt-2 section-title-brush">Contact</h2>
+    </div>
+
+    <div class="max-w-2xl mx-auto">
+      <div class="border-[3px] border-sumi bg-white p-10 relative reveal">
+        <!-- Inner frame -->
+        <div class="absolute inset-2 border border-sumi/10 pointer-events-none"></div>
+        <!-- Corner marks -->
+        <div class="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-vermillion"></div>
+        <div class="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-vermillion"></div>
+        <div class="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-vermillion"></div>
+        <div class="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-vermillion"></div>
+
+        <div class="text-center">
+          <h3 class="font-serif font-bold text-xl tracking-[4px] mb-4 kanji-flip" data-en="Contact"><span class="kanji-face">連絡</span><span class="english-face">Contact</span></h3>
+          <p class="text-sm text-ash max-w-md mx-auto mb-8 leading-relaxed">
+            Interested in working together? Send a message and let's build something meaningful.
+          </p>
+        </div>
+
+        <!-- Contact Form -->
+        <form id="contactForm" class="space-y-5 text-left">
+          <div class="contact-field">
+            <label for="contactName" class="font-serif text-xs tracking-[3px] text-sumi/70 uppercase block mb-1.5">Name</label>
+            <input type="text" id="contactName" name="name" required
+              class="w-full px-4 py-3 bg-paper border-2 border-sumi/20 font-serif text-sm text-sumi tracking-wide outline-none transition-all duration-400 focus:border-vermillion" placeholder="Your name" />
+          </div>
+
+          <div class="contact-field">
+            <label for="contactEmail" class="font-serif text-xs tracking-[3px] text-sumi/70 uppercase block mb-1.5">Email</label>
+            <input type="email" id="contactEmail" name="email" required
+              class="w-full px-4 py-3 bg-paper border-2 border-sumi/20 font-serif text-sm text-sumi tracking-wide outline-none transition-all duration-400 focus:border-vermillion" placeholder="your@email.com" />
+          </div>
+
+          <div class="contact-field">
+            <label for="contactSubject" class="font-serif text-xs tracking-[3px] text-sumi/70 uppercase block mb-1.5">Subject</label>
+            <input type="text" id="contactSubject" name="subject" required
+              class="w-full px-4 py-3 bg-paper border-2 border-sumi/20 font-serif text-sm text-sumi tracking-wide outline-none transition-all duration-400 focus:border-vermillion" placeholder="What's this about?" />
+          </div>
+
+          <div class="contact-field">
+            <label for="contactMessage" class="font-serif text-xs tracking-[3px] text-sumi/70 uppercase block mb-1.5">Message</label>
+            <textarea id="contactMessage" name="message" required rows="5"
+              class="w-full px-4 py-3 bg-paper border-2 border-sumi/20 font-serif text-sm text-sumi tracking-wide outline-none transition-all duration-400 focus:border-vermillion resize-none" placeholder="Write your message here..."></textarea>
+          </div>
+
+          <div class="text-center pt-2">
+            <button type="submit" id="contactSubmit"
+              class="contact-submit inline-block font-serif text-sm tracking-[5px] uppercase text-paper bg-sumi border-2 border-sumi px-10 py-3.5 cursor-pointer hover:bg-vermillion hover:border-vermillion transition-all duration-500 relative overflow-hidden">
+              <span class="submit-text">Send</span>
+              <span class="submit-loading hidden absolute inset-0 flex items-center justify-center">
+                <svg class="ink-spinner w-5 h-5 animate-spin" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="#f5f0e8" stroke-width="2" opacity="0.3"/>
+                  <path d="M12 2 A10 10 0 0 1 22 12" stroke="#c23030" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Status Messages -->
+        <div id="contactStatus" class="mt-6 hidden">
+          <div class="contact-success hidden text-center py-4 px-6 border-2 border-vermillion/30 bg-vermillion/5">
+            <svg viewBox="0 0 50 50" class="w-10 h-10 mx-auto mb-2 hanko-success">
+              <rect x="8" y="8" width="34" height="34" rx="2" fill="none" stroke="#c23030" stroke-width="2"/>
+              <text x="25" y="30" text-anchor="middle" fill="#c23030" font-family="Noto Serif JP" font-size="11" font-weight="700">送信</text>
+            </svg>
+            <p class="font-serif text-sm text-vermillion tracking-wider">Message sent successfully.</p>
+            <p class="font-serif text-[10px] text-ash/60 tracking-[2px] mt-1">I'll respond soon.</p>
+          </div>
+          <div class="contact-error hidden text-center py-4 px-6 border-2 border-sumi/20 bg-sumi/5">
+            <p class="font-serif text-sm text-sumi tracking-wider">Failed to send.</p>
+            <p class="font-serif text-[10px] text-ash/60 tracking-[2px] mt-1 error-detail"></p>
+          </div>
+        </div>
+
+        <!-- Links below form -->
+        <div class="flex flex-wrap gap-3 justify-center mt-8 pt-6 border-t border-sumi/10">
+          <a href="https://github.com/Muakhir" target="_blank" rel="noopener" class="contact-btn flex items-center gap-2 px-6 py-3 bg-sumi text-paper no-underline font-serif text-xs tracking-[3px] border border-sumi hover:bg-vermillion hover:border-vermillion transition-all duration-500">
+            <span>GitHub</span>
+          </a>
+          <a href="https://github.com/Muakhir?tab=repositories" target="_blank" rel="noopener" class="contact-btn flex items-center gap-2 px-6 py-3 bg-transparent text-sumi no-underline font-serif text-xs tracking-[3px] border border-sumi hover:bg-sumi hover:text-paper transition-all duration-500">
+            <span>Repositories</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quote -->
+      <div class="mt-10 border-t border-sumi/10 pt-8 text-center">
+        <p class="font-serif text-sm text-ash/60 italic tracking-wide">
+          "The code never ends. The next chapter is always yours to write."
+        </p>
+        <div class="mt-4">
+          <svg viewBox="0 0 50 50" class="w-10 h-10 mx-auto opacity-30">
+            <rect x="8" y="8" width="34" height="34" rx="2" fill="none" stroke="#c23030" stroke-width="2"/>
+            <text x="25" y="22" text-anchor="middle" fill="#c23030" font-family="Noto Serif JP" font-size="9" font-weight="700">開発</text>
+            <text x="25" y="35" text-anchor="middle" fill="#c23030" font-family="Noto Serif JP" font-size="9" font-weight="700">者</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="text-center py-8 bg-ink border-t border-vermillion/20">
+    <p class="font-serif text-xs tracking-[4px] text-paper/30">MUAKHIR <span class="text-vermillion/50 kanji-flip" data-en="Dev"><span class="kanji-face">開発</span><span class="english-face">Dev</span></span> &copy; 2026</p>
+    <p class="font-sans text-[10px] tracking-wider mt-1 text-paper/15">Crafted with precision</p>
+  </footer>
+
+  <!-- ═══ BACK TO TOP ═══ -->
+  <button id="backToTop" class="fixed bottom-6 right-6 z-[999] w-12 h-12 bg-sumi/90 border border-vermillion/40 text-paper flex items-center justify-center opacity-0 translate-y-4 pointer-events-none transition-all duration-500 hover:bg-vermillion hover:border-vermillion cursor-pointer" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M12,19 L12,5 M5,12 L12,5 L19,12"/>
+    </svg>
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>
