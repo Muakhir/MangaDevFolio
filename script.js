@@ -324,6 +324,159 @@ document.addEventListener('DOMContentLoaded', () => {
     statusEl.querySelector('.error-detail').textContent = msg;
   }
 
+  // ─── MANGA SFX POPUPS ───
+  const sfxList = [
+    { text: 'ドン！', en: 'BOOM' },
+    { text: 'バッ！', en: 'WHOOSH' },
+    { text: 'ザッ！', en: 'SLASH' },
+    { text: 'ゴゴゴ', en: 'RUMBLE' },
+    { text: 'パァン', en: 'BANG' },
+    { text: 'シュッ', en: 'SWISH' },
+    { text: 'ドドド', en: 'THUD' },
+    { text: 'ギュッ', en: 'GRIP' },
+  ];
+
+  const sectionSfx = [
+    { text: '第一章', en: 'CH.1' },
+    { text: '第二章', en: 'CH.2' },
+    { text: '第三章', en: 'CH.3' },
+    { text: '第四章', en: 'CH.4' },
+    { text: '最終章', en: 'FINAL' },
+  ];
+
+  function spawnSFX(x, y, sfx, options = {}) {
+    const el = document.createElement('div');
+    el.className = 'manga-sfx' + (options.large ? ' manga-sfx-large' : '');
+    el.innerHTML = `<span class="sfx-jp">${sfx.text}</span>`;
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    if (options.rotation) el.style.setProperty('--sfx-rot', options.rotation + 'deg');
+    document.body.appendChild(el);
+    el.addEventListener('animationend', () => el.remove());
+  }
+
+  // SFX on button/link clicks
+  document.addEventListener('click', (e) => {
+    const target = e.target.closest('a, button, .manga-panel, .tech-card, .contact-btn');
+    if (!target) return;
+    const rect = target.getBoundingClientRect();
+    const sfx = sfxList[Math.floor(Math.random() * sfxList.length)];
+    const x = rect.left + rect.width * (0.5 + (Math.random() - 0.5) * 0.6);
+    const y = rect.top - 10;
+    const rot = (Math.random() - 0.5) * 30;
+    spawnSFX(x, y, sfx, { rotation: rot });
+  });
+
+  // SFX on section enter
+  let sfxSectionIndex = 0;
+  const sectionSfxObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const rect = entry.target.getBoundingClientRect();
+        const sfx = sectionSfx[sfxSectionIndex % sectionSfx.length];
+        spawnSFX(rect.left + rect.width / 2, rect.top + 60, sfx, { large: true, rotation: (Math.random() - 0.5) * 15 });
+        sfxSectionIndex++;
+        sectionSfxObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('section[id]').forEach(s => sectionSfxObserver.observe(s));
+
+  // SFX on form submit success
+  const origShowSuccess = showContactSuccess;
+  showContactSuccess = function() {
+    origShowSuccess();
+    const form = document.getElementById('contactForm');
+    if (form) {
+      const rect = form.getBoundingClientRect();
+      spawnSFX(rect.left + rect.width / 2, rect.top + rect.height / 2, { text: '送信完了！', en: 'SENT!' }, { large: true });
+    }
+  };
+
+  // ─── CHAPTER PROGRESS BAR (TANKOUBON) ───
+  const chapters = [
+    { id: 'hero', label: '序章', en: 'Prologue' },
+    { id: 'about', label: '第一章', en: 'Ch.1' },
+    { id: 'skills', label: '第二章', en: 'Ch.2' },
+    { id: 'works', label: '第三章', en: 'Ch.3' },
+    { id: 'gallery', label: '第四章', en: 'Ch.4' },
+    { id: 'contact', label: '最終章', en: 'Final' },
+  ];
+
+  // Build progress bar DOM
+  const progressBar = document.createElement('div');
+  progressBar.className = 'chapter-progress';
+  progressBar.innerHTML = chapters.map((ch, i) => `
+    <a href="#${ch.id}" class="chapter-dot" data-chapter="${i}" title="${ch.en}">
+      <span class="chapter-dot-marker"></span>
+      <span class="chapter-dot-label">${ch.label}</span>
+    </a>
+  `).join('') + '<div class="chapter-progress-line"><div class="chapter-progress-fill"></div></div>';
+  document.body.appendChild(progressBar);
+
+  // Track active chapter
+  let activeChapter = 0;
+  const chapterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = chapters.findIndex(ch => ch.id === entry.target.id);
+        if (idx !== -1) {
+          activeChapter = idx;
+          updateProgressBar();
+        }
+      }
+    });
+  }, { threshold: 0.3 });
+
+  chapters.forEach(ch => {
+    const el = document.getElementById(ch.id);
+    if (el) chapterObserver.observe(el);
+  });
+
+  function updateProgressBar() {
+    const dots = progressBar.querySelectorAll('.chapter-dot');
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('is-active', i === activeChapter);
+      dot.classList.toggle('is-passed', i < activeChapter);
+    });
+    const fill = progressBar.querySelector('.chapter-progress-fill');
+    const pct = (activeChapter / (chapters.length - 1)) * 100;
+    fill.style.height = pct + '%';
+  }
+  updateProgressBar();
+
+  // Click to scroll
+  progressBar.querySelectorAll('.chapter-dot').forEach(dot => {
+    dot.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = document.querySelector(dot.getAttribute('href'));
+      if (target) lenis.scrollTo(target, { offset: -60, duration: 2.0 });
+    });
+  });
+
+  // ─── LIVE VISITOR COUNTER ───
+  function initVisitorCounter() {
+    const counter = document.getElementById('visitorCount');
+    if (!counter) return;
+
+    function ping() {
+      fetch('visitors.php')
+        .then(r => r.json())
+        .then(data => {
+          if (data.count !== undefined) {
+            counter.textContent = data.count;
+            counter.closest('.visitor-counter')?.classList.add('is-loaded');
+          }
+        })
+        .catch(() => {});
+    }
+
+    ping();
+    setInterval(ping, 15000); // Ping every 15s
+  }
+  initVisitorCounter();
+
   // ─── SMOOTH PARALLAX ON HERO ───
   const hero = document.getElementById('hero');
   if (hero) {

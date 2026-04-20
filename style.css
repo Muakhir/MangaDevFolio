@@ -466,3 +466,151 @@ section {
 @keyframes fadeIn {
   to { opacity: 0.4; }
 }
+
+/* ═══════════════════════════════════════════
+   MANGA SFX POPUPS
+   ═══════════════════════════════════════════ */
+.manga-sfx {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9997;
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 900;
+  font-size: 1.6rem;
+  color: #c23030;
+  text-shadow: 2px 2px 0 #0a0a0f, -1px -1px 0 #0a0a0f;
+  transform: rotate(var(--sfx-rot, -5deg)) scale(0);
+  animation: sfxPop 0.8s cubic-bezier(0.17, 0.89, 0.32, 1.28) forwards;
+  white-space: nowrap;
+}
+
+.manga-sfx-large {
+  font-size: 2.4rem;
+  color: #f5f0e8;
+  text-shadow: 3px 3px 0 #c23030, -1px -1px 0 #c23030;
+}
+
+.sfx-jp {
+  display: inline-block;
+  letter-spacing: 2px;
+}
+
+@keyframes sfxPop {
+  0% { transform: rotate(var(--sfx-rot, -5deg)) scale(0); opacity: 1; }
+  30% { transform: rotate(var(--sfx-rot, -5deg)) scale(1.3); opacity: 1; }
+  50% { transform: rotate(var(--sfx-rot, -5deg)) scale(1); opacity: 0.9; }
+  100% { transform: rotate(var(--sfx-rot, -5deg)) scale(0.8) translateY(-20px); opacity: 0; }
+}
+
+/* ═══════════════════════════════════════════
+   CHAPTER PROGRESS BAR (TANKOUBON)
+   ═══════════════════════════════════════════ */
+.chapter-progress {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 998;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 8px;
+}
+
+.chapter-progress-line {
+  position: absolute;
+  top: 16px;
+  bottom: 16px;
+  width: 2px;
+  background: rgba(26, 26, 26, 0.1);
+  border-radius: 1px;
+  z-index: -1;
+}
+
+.chapter-progress-fill {
+  width: 100%;
+  height: 0%;
+  background: #c23030;
+  border-radius: 1px;
+  transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chapter-dot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+}
+
+.chapter-dot-marker {
+  width: 10px;
+  height: 10px;
+  border: 2px solid rgba(26, 26, 26, 0.2);
+  border-radius: 1px;
+  background: #f5f0e8;
+  transition: all 0.4s ease;
+  transform: rotate(45deg);
+}
+
+.chapter-dot.is-active .chapter-dot-marker {
+  border-color: #c23030;
+  background: #c23030;
+  box-shadow: 0 0 8px rgba(194, 48, 48, 0.4);
+  transform: rotate(45deg) scale(1.3);
+}
+
+.chapter-dot.is-passed .chapter-dot-marker {
+  border-color: #c23030;
+  background: #c23030;
+  opacity: 0.5;
+}
+
+.chapter-dot-label {
+  position: absolute;
+  right: 20px;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: rgba(26, 26, 26, 0.3);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(5px);
+  transition: opacity 0.3s, transform 0.3s;
+  pointer-events: none;
+}
+
+.chapter-dot:hover .chapter-dot-label,
+.chapter-dot.is-active .chapter-dot-label {
+  opacity: 1;
+  transform: translateX(0);
+  color: #c23030;
+}
+
+/* Dark section override */
+@media (min-width: 768px) {
+  .chapter-progress {
+    mix-blend-mode: normal;
+  }
+}
+
+/* Hide on mobile */
+@media (max-width: 767px) {
+  .chapter-progress {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   VISITOR COUNTER
+   ═══════════════════════════════════════════ */
+.visitor-counter {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.visitor-counter.is-loaded {
+  opacity: 1;
+}
