@@ -287,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
       statusEl.querySelector('.contact-error').classList.add('hidden');
 
       try {
-        const res = await fetch('send.php', {
+        const res = await fetch('/api/send', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name, email, subject, message }),
@@ -461,7 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!counter) return;
 
     function ping() {
-      fetch('visitors.php')
+      fetch('/api/visitors')
         .then(r => r.json())
         .then(data => {
           if (data.count !== undefined) {

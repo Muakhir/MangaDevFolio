@@ -1,0 +1,25 @@
+{
+  "name": "mangadevfolio",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Muakhir/MangaDevFolio.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Muakhir/MangaDevFolio/issues"
+  },
+  "homepage": "https://github.com/Muakhir/MangaDevFolio#readme",
+  "dependencies": {
+    "@upstash/redis": "^1.37.0",
+    "nodemailer": "^8.0.5"
+  }
+}

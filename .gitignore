@@ -1,3 +1,4 @@
 .env
 phpmailer/
 data/
+node_modules/
